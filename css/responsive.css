@@ -1,0 +1,116 @@
+/* ============================================================
+   Patas & Pelos Pet Shop — responsive.css
+   Breakpoints: 1100px · 900px · 640px · 430px
+   ============================================================ */
+
+@media (max-width:1100px){
+  .grid-products{grid-template-columns:repeat(3,1fr)}
+  .foot-grid{grid-template-columns:1fr 1fr 1fr;gap:30px}
+  .foot-brand{grid-column:1/-1}
+  .foot-brand p{max-width:520px}
+  .benefits-grid{grid-template-columns:1fr 1fr}
+  .tips-grid{grid-template-columns:1fr 1fr}
+  .nav-link{padding:10px 8px;font-size:14px}
+}
+
+@media (max-width:900px){
+  .section{padding:46px 0}
+  /* Header vira hambúrguer */
+  .nav{display:none}
+  .hamburger{display:inline-flex;justify-self:start}
+  .header-inner{grid-template-columns:auto 1fr auto}
+  .logo{justify-self:center}
+  .h-user{display:none}
+  .topbar .tb-left .tb-link{display:none}
+  .topbar-inner{justify-content:center}
+  .tb-right{gap:12px}
+  /* Hero */
+  .hero{min-height:460px}
+  .hero-inner{padding:60px 0}
+  /* Grids */
+  .grid-products{grid-template-columns:repeat(2,1fr);gap:16px}
+  .split{grid-template-columns:1fr;gap:28px}
+  .split-float{left:10px}
+  .art-grid{grid-template-columns:1fr 1fr}
+  .art-featured{grid-template-columns:1fr}
+  .art-featured .art-media{min-height:0;aspect-ratio:16/8}
+  .t-card{flex-basis:calc(50% - 11px)}
+  .promo-band{flex-direction:column;text-align:center;padding:36px 26px}
+  .promo-code{margin-left:auto;margin-right:auto}
+  .pd-grid{grid-template-columns:1fr;gap:28px}
+  .cart-layout{grid-template-columns:1fr}
+  .cart-summary{position:static}
+  .profile-grid{grid-template-columns:1fr 1fr}
+  .ajuda-grid{grid-template-columns:1fr}
+  .ajuda-nav{position:static;display:flex;overflow-x:auto;gap:4px}
+  .ajuda-nav a{white-space:nowrap}
+  .info-cards{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .cat-hero{padding:28px;gap:20px}
+  .cat-tile{width:92px;height:92px;border-radius:24px}
+  .cat-tile .ic{width:48px;height:48px}
+}
+
+@media (max-width:640px){
+  .container{padding:0 16px}
+  .section{padding:38px 0}
+  .sec-head{flex-direction:column;align-items:flex-start;gap:10px}
+  .logo-text{font-size:17px}
+  .logo-mark{width:38px;height:38px;border-radius:12px}
+  /* Busca */
+  .search-box input{height:52px;font-size:15px;padding-right:104px}
+  .search-go{height:38px;top:7px;padding:0 16px;font-size:13.5px}
+  .search-clear{right:82px}
+  /* Cards */
+  .grid-products{gap:14px}
+  .p-body{padding:13px}
+  .p-name{font-size:13.5px}
+  .p-price strong{font-size:18px}
+  .p-icon{width:72px;height:72px}
+  .p-body .btn{padding:10px 12px;font-size:13px}
+  .p-cat{font-size:10.5px}
+  .p-price .parc{display:none}
+  .art-grid{grid-template-columns:1fr}
+  .t-card{flex-basis:86%}
+  .benefits-grid{grid-template-columns:1fr}
+  .tips-grid{grid-template-columns:1fr}
+  .profile-grid{grid-template-columns:1fr}
+  .addr-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .pd-mini{grid-template-columns:1fr}
+  .pd-actions .btn{min-width:100%}
+  .pd-media .p-icon{width:150px;height:150px}
+  .cart-line{grid-template-columns:72px 1fr;gap:12px}
+  .c-thumb{width:72px;height:72px;border-radius:14px}
+  .c-thumb .ic{width:40px;height:40px}
+  .c-right{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}
+  .cat-hero{flex-direction:column;text-align:center;padding:28px 22px}
+  .cat-stats{justify-content:center}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .sort-wrap{justify-content:space-between}
+  .sort-wrap select{flex:1}
+  .foot-grid{grid-template-columns:1fr;gap:28px;padding:44px 0 30px}
+  .foot-bottom-inner{justify-content:center;text-align:center}
+  .busca-form{flex-direction:column}
+  .pill{width:100px}
+  .pill-media{width:88px;height:88px}
+  .pill-media .ic{width:40px;height:40px}
+  .auth-card{padding:26px 20px}
+  .modal{padding:12px}
+  .back-top{right:16px;bottom:16px}
+  .hero-cta .btn{flex:1}
+}
+
+@media (max-width:430px){
+  .h-fav{display:none}
+  .hero{min-height:420px}
+  .pd-price strong{font-size:30px}
+}
+
+/* Menos animações para quem prefere */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  .scroll-cue{display:none}
+}
