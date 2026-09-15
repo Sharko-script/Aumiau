@@ -1,797 +1,227 @@
 /* ============================================================
-   AUMIAU / PATAS & PELOS
-   app.js - melhorias gerais e compatibilidade
+   AUMIAU / PATAS & PELOS — app.js
+   Camada extra de compatibilidade e interações gerais.
+   Não substitui products.js, cart.js, favorites.js, search.js etc.
    ============================================================ */
-
 (function () {
-    "use strict";
+  'use strict';
 
-    /* ---------------------------------------------------------
-       Aguarda o carregamento completo do site
-    --------------------------------------------------------- */
-    document.addEventListener("DOMContentLoaded", function () {
+  function ready(fn) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fn);
+    else fn();
+  }
 
-        console.log("🐾 Aumiau: JavaScript carregado!");
+  function toast(message, type) {
+    if (window.PS && typeof PS.toast === 'function') {
+      try { PS.toast(message, type || 'success'); return; } catch (_) {}
+    }
+    var old = document.getElementById('aumiau-toast');
+    if (old) old.remove();
+    var el = document.createElement('div');
+    el.id = 'aumiau-toast';
+    el.textContent = message;
+    el.style.cssText = [
+      'position:fixed','left:50%','bottom:24px','transform:translateX(-50%)',
+      'z-index:99999','padding:12px 18px','border-radius:12px','background:#0B2B4C',
+      'color:#fff','font:700 14px Nunito,Arial,sans-serif','box-shadow:0 10px 30px rgba(0,0,0,.2)',
+      'opacity:0','transition:opacity .2s ease'
+    ].join(';');
+    if (type === 'error') el.style.background = '#b42318';
+    document.body.appendChild(el);
+    requestAnimationFrame(function () { el.style.opacity = '1'; });
+    setTimeout(function () {
+      el.style.opacity = '0';
+      setTimeout(function () { if (el.parentNode) el.remove(); }, 220);
+    }, 2600);
+  }
 
-        /* =====================================================
-           1. BOTÃO VOLTAR AO TOPO
-        ===================================================== */
+  function scrollTopButton() {
+    if (document.getElementById('aumiau-top')) return;
+    var btn = document.createElement('button');
+    btn.id = 'aumiau-top';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Voltar ao topo');
+    btn.textContent = '↑';
+    btn.style.cssText = [
+      'position:fixed','right:20px','bottom:20px','width:46px','height:46px',
+      'border:0','border-radius:50%','background:#0B2B4C','color:#fff','font-size:23px',
+      'font-weight:900','cursor:pointer','z-index:9998','opacity:0','visibility:hidden',
+      'transform:translateY(12px)','transition:.2s ease','box-shadow:0 8px 25px rgba(0,0,0,.18)'
+    ].join(';');
+    document.body.appendChild(btn);
+    function update() {
+      var show = window.scrollY > 450;
+      btn.style.opacity = show ? '1' : '0';
+      btn.style.visibility = show ? 'visible' : 'hidden';
+      btn.style.transform = show ? 'translateY(0)' : 'translateY(12px)';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    update();
+  }
 
-        criarBotaoTopo();
+  function progressBar() {
+    if (document.getElementById('aumiau-progress')) return;
+    var bar = document.createElement('div');
+    bar.id = 'aumiau-progress';
+    bar.style.cssText = 'position:fixed;top:0;left:0;width:0;height:3px;background:#F2A007;z-index:100000;pointer-events:none;transition:width .08s linear;';
+    document.body.appendChild(bar);
+    function update() {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.width = (max > 0 ? Math.min(100, window.scrollY / max * 100) : 0) + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
 
-
-        /* =====================================================
-           2. BARRA DE PROGRESSO DA PÁGINA
-        ===================================================== */
-
-        criarBarraProgresso();
-
-
-        /* =====================================================
-           3. ROLAGEM SUAVE
-        ===================================================== */
-
-        ativarRolagemSuave();
-
-
-        /* =====================================================
-           4. ATALHO "/" PARA PESQUISA
-        ===================================================== */
-
-        ativarAtalhoPesquisa();
-
-
-        /* =====================================================
-           5. ESC FECHA ELEMENTOS ABERTOS
-        ===================================================== */
-
-        ativarTeclaEscape();
-
-
-        /* =====================================================
-           6. DETECTAR INTERNET
-        ===================================================== */
-
-        detectarConexao();
-
-
-        /* =====================================================
-           7. LINKS COM HASH
-        ===================================================== */
-
-        corrigirLinksInternos();
-
-
-        /* =====================================================
-           8. ANIMAÇÃO DOS ELEMENTOS
-        ===================================================== */
-
-        animarElementos();
-
-
-        /* =====================================================
-           9. PROTEÇÃO CONTRA IMAGENS QUEBRADAS
-        ===================================================== */
-
-        protegerImagens();
-
-
-        /* =====================================================
-           10. BOTÕES DE PRODUTO
-        ===================================================== */
-
-        ativarBotoesProduto();
-
-
-        /* =====================================================
-           11. CONTADOR DO CARRINHO
-        ===================================================== */
-
-        atualizarContadores();
-
-
-        console.log("✅ Aumiau: recursos extras inicializados!");
+  function smoothAnchors() {
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest('a[href^="#"]');
+      if (!link) return;
+      var href = link.getAttribute('href');
+      if (!href || href === '#') return;
+      var target;
+      try { target = document.querySelector(href); } catch (_) { return; }
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (history.replaceState) history.replaceState(null, '', href);
     });
+  }
 
+  function keyboardSearch() {
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== '/' || event.ctrlKey || event.altKey || event.metaKey) return;
+      var active = document.activeElement;
+      if (active && /INPUT|TEXTAREA|SELECT/.test(active.tagName)) return;
+      var input = document.getElementById('buscaInput') || document.getElementById('buscaPageInput');
+      if (!input) return;
+      event.preventDefault();
+      input.focus();
+      if (typeof input.select === 'function') input.select();
+    });
+  }
 
-    /* =========================================================
-       BOTÃO VOLTAR AO TOPO
-    ========================================================= */
+  function escapeKey() {
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      var sug = document.getElementById('searchSug');
+      if (sug) sug.classList.remove('show', 'open');
+      var modal = document.querySelector('.modal.is-open, .modal.open, [role="dialog"].is-open');
+      if (modal) modal.classList.remove('is-open', 'open');
+      document.body.classList.remove('modal-open');
+    });
+  }
 
-    function criarBotaoTopo() {
+  function imageFallback() {
+    document.querySelectorAll('img').forEach(function (img) {
+      img.addEventListener('error', function () {
+        if (img.dataset.fallback) return;
+        img.dataset.fallback = '1';
+        img.alt = img.alt || 'Imagem do produto';
+        img.style.visibility = 'hidden';
+        var parent = img.parentElement;
+        if (!parent || parent.querySelector('.aumiau-img-fallback')) return;
+        var fallback = document.createElement('div');
+        fallback.className = 'aumiau-img-fallback';
+        fallback.textContent = '🐾';
+        fallback.setAttribute('aria-hidden', 'true');
+        fallback.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:42px;background:#f4f6f8;';
+        if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+        parent.appendChild(fallback);
+      }, { once: true });
+    });
+  }
 
-        if (document.getElementById("btnVoltarTopo")) {
-            return;
-        }
-
-        var botao = document.createElement("button");
-
-        botao.id = "btnVoltarTopo";
-        botao.type = "button";
-        botao.setAttribute("aria-label", "Voltar ao topo");
-        botao.innerHTML = "↑";
-
-        botao.style.cssText = `
-            position: fixed;
-            right: 22px;
-            bottom: 22px;
-            width: 48px;
-            height: 48px;
-            border: 0;
-            border-radius: 50%;
-            background: #16324F;
-            color: #FFFFFF;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(15px);
-            transition: all .25s ease;
-            box-shadow: 0 8px 25px rgba(0,0,0,.18);
-        `;
-
-        document.body.appendChild(botao);
-
-        window.addEventListener("scroll", function () {
-
-            if (window.scrollY > 400) {
-
-                botao.style.opacity = "1";
-                botao.style.visibility = "visible";
-                botao.style.transform = "translateY(0)";
-
-            } else {
-
-                botao.style.opacity = "0";
-                botao.style.visibility = "hidden";
-                botao.style.transform = "translateY(15px)";
-            }
-
-        }, { passive: true });
-
-
-        botao.addEventListener("click", function () {
-
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth"
-            });
-
-        });
+  function copyButtons() {
+    document.addEventListener('click', function (event) {
+      var btn = event.target.closest('[data-copy]');
+      if (!btn) return;
+      var value = btn.getAttribute('data-copy');
+      if (!value) return;
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(value).then(function () {
+          toast('Cupom copiado: ' + value);
+        }).catch(function () { fallbackCopy(value); });
+      } else fallbackCopy(value);
+    });
+    function fallbackCopy(value) {
+      var input = document.createElement('textarea');
+      input.value = value;
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.select();
+      try { document.execCommand('copy'); toast('Cupom copiado: ' + value); }
+      catch (_) { toast('Copie o cupom: ' + value); }
+      input.remove();
     }
-
-
-    /* =========================================================
-       BARRA DE PROGRESSO
-    ========================================================= */
-
-    function criarBarraProgresso() {
-
-        if (document.getElementById("aumiauProgress")) {
-            return;
-        }
-
-        var barra = document.createElement("div");
-
-        barra.id = "aumiauProgress";
-
-        barra.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 4px;
-            background: #F2A93B;
-            z-index: 10000;
-            transition: width .1s linear;
-        `;
-
-        document.body.appendChild(barra);
-
-
-        function atualizar() {
-
-            var altura =
-                document.documentElement.scrollHeight -
-                document.documentElement.clientHeight;
-
-            if (altura <= 0) {
-                barra.style.width = "0%";
-                return;
-            }
-
-            var porcentagem =
-                (window.scrollY / altura) * 100;
-
-            barra.style.width =
-                Math.min(100, Math.max(0, porcentagem)) + "%";
-        }
-
-
-        window.addEventListener(
-            "scroll",
-            atualizar,
-            { passive: true }
-        );
-
-        window.addEventListener(
-            "resize",
-            atualizar
-        );
-
-        atualizar();
-    }
-
-
-    /* =========================================================
-       ROLAGEM SUAVE
-    ========================================================= */
-
-    function ativarRolagemSuave() {
-
-        document.addEventListener("click", function (event) {
-
-            var link = event.target.closest("a[href^='#']");
-
-            if (!link) {
-                return;
-            }
-
-            var href = link.getAttribute("href");
-
-            if (!href || href === "#") {
-                return;
-            }
-
-            var destino = document.querySelector(href);
-
-            if (!destino) {
-                return;
-            }
-
-            event.preventDefault();
-
-            destino.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-        });
-    }
-
-
-    /* =========================================================
-       ATALHO "/" PARA PESQUISA
-    ========================================================= */
-
-    function ativarAtalhoPesquisa() {
-
-        document.addEventListener("keydown", function (event) {
-
-            if (event.key !== "/") {
-                return;
-            }
-
-            var tag = document.activeElement.tagName;
-
-            if (
-                tag === "INPUT" ||
-                tag === "TEXTAREA" ||
-                tag === "SELECT"
-            ) {
-                return;
-            }
-
-            var pesquisa =
-                document.getElementById("buscaInput") ||
-                document.getElementById("buscaPageInput");
-
-            if (!pesquisa) {
-                return;
-            }
-
-            event.preventDefault();
-
-            pesquisa.focus();
-            pesquisa.select();
-        });
-    }
-
-
-    /* =========================================================
-       TECLA ESC
-    ========================================================= */
-
-    function ativarTeclaEscape() {
-
-        document.addEventListener("keydown", function (event) {
-
-            if (event.key !== "Escape") {
-                return;
-            }
-
-            /* Fecha sugestões de pesquisa */
-
-            var sugestoes =
-                document.getElementById("searchSug");
-
-            if (sugestoes) {
-                sugestoes.classList.remove("show");
-            }
-
-
-            /* Fecha modal usando a estrutura existente */
-
-            if (
-                window.PS &&
-                PS.modal &&
-                typeof PS.modal.close === "function"
-            ) {
-                try {
-                    PS.modal.close();
-                } catch (erro) {
-                    console.warn(
-                        "Não foi possível fechar o modal:",
-                        erro
-                    );
-                }
-            }
-        });
-    }
-
-
-    /* =========================================================
-       DETECTAR CONEXÃO
-    ========================================================= */
-
-    function detectarConexao() {
-
-        window.addEventListener("offline", function () {
-
-            mostrarAviso(
-                "Você está sem conexão com a internet.",
-                "warning"
-            );
-
-        });
-
-
-        window.addEventListener("online", function () {
-
-            mostrarAviso(
-                "Conexão restabelecida!",
-                "success"
-            );
-
-        });
-    }
-
-
-    /* =========================================================
-       AVISO
-    ========================================================= */
-
-    function mostrarAviso(mensagem, tipo) {
-
-        /* Se o sistema original já possui toast,
-           utiliza ele. */
-
-        if (
-            window.PS &&
-            typeof PS.toast === "function"
-        ) {
-
-            try {
-
-                PS.toast(
-                    mensagem,
-                    tipo === "warning"
-                        ? "error"
-                        : "success"
-                );
-
-                return;
-
-            } catch (erro) {
-                console.warn(erro);
-            }
-        }
-
-
-        /* Toast próprio como fallback */
-
-        var antigo =
-            document.getElementById("aumiauToast");
-
-        if (antigo) {
-            antigo.remove();
-        }
-
-
-        var toast = document.createElement("div");
-
-        toast.id = "aumiauToast";
-        toast.textContent = mensagem;
-
-        toast.style.cssText = `
-            position: fixed;
-            left: 50%;
-            bottom: 25px;
-            transform: translateX(-50%);
-            background: #16324F;
-            color: #FFFFFF;
-            padding: 13px 20px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            z-index: 10001;
-            box-shadow: 0 8px 30px rgba(0,0,0,.2);
-        `;
-
-        document.body.appendChild(toast);
-
-
+  }
+
+  function productButtonFeedback() {
+    document.addEventListener('click', function (event) {
+      var button = event.target.closest('[data-add]');
+      if (!button || button.dataset.aumiauFeedback === '1') return;
+      button.dataset.aumiauFeedback = '1';
+      var original = button.innerHTML;
+      setTimeout(function () {
+        if (!document.body.contains(button)) return;
+        button.innerHTML = '✓ Adicionado';
+        button.classList.add('aumiau-added');
         setTimeout(function () {
+          if (!document.body.contains(button)) return;
+          button.innerHTML = original;
+          button.classList.remove('aumiau-added');
+          delete button.dataset.aumiauFeedback;
+        }, 900);
+      }, 30);
+    });
+  }
 
-            toast.style.opacity = "0";
-            toast.style.transition = "opacity .3s";
+  function connectionStatus() {
+    window.addEventListener('offline', function () { toast('Você está sem conexão com a internet.', 'error'); });
+    window.addEventListener('online', function () { toast('Conexão restabelecida!'); });
+  }
 
-            setTimeout(function () {
-                toast.remove();
-            }, 300);
-
-        }, 3000);
+  function reveal() {
+    var nodes = document.querySelectorAll('.reveal:not(.aumiau-observed)');
+    if (!nodes.length) return;
+    if (!('IntersectionObserver' in window)) {
+      nodes.forEach(function (el) { el.classList.add('in'); });
+      return;
     }
-
-
-    /* =========================================================
-       LINKS INTERNOS
-    ========================================================= */
-
-    function corrigirLinksInternos() {
-
-        document.querySelectorAll("a").forEach(function (link) {
-
-            var href = link.getAttribute("href");
-
-            if (!href) {
-                return;
-            }
-
-            /*
-             * Não modifica:
-             * - links externos
-             * - telefone
-             * - email
-             * - javascript
-             * - âncoras
-             */
-
-            if (
-                href.startsWith("http://") ||
-                href.startsWith("https://") ||
-                href.startsWith("mailto:") ||
-                href.startsWith("tel:") ||
-                href.startsWith("javascript:") ||
-                href.startsWith("#")
-            ) {
-                return;
-            }
-
-        });
-    }
-
-
-    /* =========================================================
-       ANIMAÇÃO DOS ELEMENTOS
-    ========================================================= */
-
-    function animarElementos() {
-
-        var elementos =
-            document.querySelectorAll(
-                ".p-card, .art-card, .t-card, .benefit, .pill"
-            );
-
-        if (!elementos.length) {
-            return;
-        }
-
-
-        /* Caso o navegador não tenha IntersectionObserver */
-
-        if (!("IntersectionObserver" in window)) {
-
-            elementos.forEach(function (elemento) {
-
-                elemento.style.opacity = "1";
-                elemento.style.transform = "none";
-
-            });
-
-            return;
-        }
-
-
-        var observer =
-            new IntersectionObserver(
-                function (entradas) {
-
-                    entradas.forEach(function (entrada) {
-
-                        if (!entrada.isIntersecting) {
-                            return;
-                        }
-
-                        entrada.target.classList.add(
-                            "aumiau-visible"
-                        );
-
-                        observer.unobserve(
-                            entrada.target
-                        );
-                    });
-
-                },
-                {
-                    threshold: 0.08
-                }
-            );
-
-
-        elementos.forEach(function (elemento) {
-
-            elemento.style.transition =
-                "opacity .5s ease, transform .5s ease";
-
-            elemento.style.opacity = "0";
-            elemento.style.transform =
-                "translateY(18px)";
-
-            observer.observe(elemento);
-        });
-
-
-        if (!document.getElementById("aumiauAnimationStyle")) {
-
-            var style =
-                document.createElement("style");
-
-            style.id = "aumiauAnimationStyle";
-
-            style.textContent = `
-                .aumiau-visible {
-                    opacity: 1 !important;
-                    transform: translateY(0) !important;
-                }
-            `;
-
-            document.head.appendChild(style);
-        }
-    }
-
-
-    /* =========================================================
-       PROTEÇÃO CONTRA IMAGENS QUEBRADAS
-    ========================================================= */
-
-    function protegerImagens() {
-
-        document.querySelectorAll("img").forEach(function (img) {
-
-            img.addEventListener("error", function () {
-
-                if (img.dataset.fallbackUsed) {
-                    return;
-                }
-
-                img.dataset.fallbackUsed = "true";
-
-                img.style.display = "none";
-
-                var pai = img.parentElement;
-
-                if (!pai) {
-                    return;
-                }
-
-                if (
-                    pai.querySelector(
-                        ".aumiau-img-placeholder"
-                    )
-                ) {
-                    return;
-                }
-
-                var placeholder =
-                    document.createElement("div");
-
-                placeholder.className =
-                    "aumiau-img-placeholder";
-
-                placeholder.textContent = "🐾";
-
-                placeholder.style.cssText = `
-                    min-height: 160px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 45px;
-                    background: #F2F4F7;
-                `;
-
-                pai.appendChild(placeholder);
-            });
-        });
-    }
-
-
-    /* =========================================================
-       BOTÕES DE PRODUTO
-    ========================================================= */
-
-    function ativarBotoesProduto() {
-
-        document.addEventListener(
-            "click",
-            function (event) {
-
-                var botao =
-                    event.target.closest(
-                        "[data-add]"
-                    );
-
-                if (!botao) {
-                    return;
-                }
-
-                var id =
-                    botao.getAttribute("data-add");
-
-                if (!id) {
-                    return;
-                }
-
-
-                /*
-                 * O cart.js do projeto já possui
-                 * a função PS.cart.add().
-                 *
-                 * Portanto não criamos outro carrinho.
-                 */
-
-                if (
-                    window.PS &&
-                    PS.cart &&
-                    typeof PS.cart.add === "function"
-                ) {
-
-                    /*
-                     * O cart.js original já pode ter
-                     * um listener para esse botão.
-                     *
-                     * Aqui apenas damos feedback visual.
-                     */
-
-                    botao.classList.add(
-                        "aumiau-added"
-                    );
-
-                    var textoOriginal =
-                        botao.innerHTML;
-
-                    botao.innerHTML =
-                        "✓ Adicionado";
-
-                    botao.disabled = true;
-
-
-                    setTimeout(function () {
-
-                        botao.innerHTML =
-                            textoOriginal;
-
-                        botao.disabled = false;
-
-                        botao.classList.remove(
-                            "aumiau-added"
-                        );
-
-                    }, 900);
-                }
-            }
-        );
-    }
-
-
-    /* =========================================================
-       ATUALIZAR CONTADORES
-    ========================================================= */
-
-    function atualizarContadores() {
-
-        /*
-         * O projeto original já controla:
-         *
-         * cartCount
-         * favCount
-         *
-         * através do layout.js.
-         *
-         * Aqui apenas verificamos se eles existem.
-         */
-
-        if (!window.PS) {
-            return;
-        }
-
-
-        try {
-
-            if (
-                PS.cart &&
-                typeof PS.cart.list === "function"
-            ) {
-
-                var itens =
-                    PS.cart.list();
-
-                var quantidade = 0;
-
-                itens.forEach(function (item) {
-
-                    quantidade +=
-                        Number(item.qty || 0);
-
-                });
-
-                var contador =
-                    document.getElementById(
-                        "cartCount"
-                    );
-
-                if (contador) {
-
-                    contador.textContent =
-                        quantidade;
-
-                    contador.hidden =
-                        quantidade === 0;
-                }
-            }
-
-
-            if (
-                PS.fav &&
-                Array.isArray(PS.fav.ids)
-            ) {
-
-                var favoritos =
-                    document.getElementById(
-                        "favCount"
-                    );
-
-                if (favoritos) {
-
-                    favoritos.textContent =
-                        PS.fav.ids.length;
-
-                    favoritos.hidden =
-                        PS.fav.ids.length === 0;
-                }
-            }
-
-        } catch (erro) {
-
-            console.warn(
-                "Aumiau: não foi possível atualizar contadores.",
-                erro
-            );
-        }
-    }
-
+    var observer = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        obs.unobserve(entry.target);
+      });
+    }, { threshold: 0.08 });
+    nodes.forEach(function (el) {
+      el.classList.add('aumiau-observed');
+      observer.observe(el);
+    });
+  }
+
+  function init() {
+    scrollTopButton();
+    progressBar();
+    smoothAnchors();
+    keyboardSearch();
+    escapeKey();
+    imageFallback();
+    copyButtons();
+    productButtonFeedback();
+    connectionStatus();
+    reveal();
+
+    // Atualiza animações após vitrines renderizadas por outros scripts.
+    setTimeout(reveal, 250);
+    setTimeout(reveal, 900);
+
+    console.log('🐾 Aumiau: app.js carregado com sucesso.');
+  }
+
+  ready(init);
 })();
