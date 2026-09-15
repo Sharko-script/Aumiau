@@ -15,8 +15,6 @@
 </head>
 <body data-page="home" data-base="" data-nav="inicio">
 <main id="conteudo">
-
-  <!-- HERO -->
   <section class="hero" aria-label="Destaque">
     <img class="hero-bg" src="assets/images/hero.jpg" alt="Cachorro e gato felizes dentro de um pet shop" fetchpriority="high">
     <div class="hero-overlay" aria-hidden="true"></div>
@@ -31,12 +29,9 @@
         </div>
       </div>
     </div>
-    <a class="scroll-cue" href="#busca" aria-label="Rolar para a busca">
-      <svg class="ic" aria-hidden="true"><use href="#i-chev-down"/></svg>
-    </a>
+    <a class="scroll-cue" href="#busca" aria-label="Rolar para a busca"><svg class="ic" aria-hidden="true"><use href="#i-chev-down"/></svg></a>
   </section>
 
-  <!-- BUSCA -->
   <section class="search-band" id="busca" aria-label="Buscar produtos">
     <div class="container">
       <h2>O que seu pet precisa hoje?</h2>
@@ -44,9 +39,7 @@
         <svg class="ic" aria-hidden="true"><use href="#i-search"/></svg>
         <label class="sr-only" for="buscaInput">Buscar produtos</label>
         <input type="search" id="buscaInput" placeholder="Busque por ração, gaiola, arranhador, coleira..." aria-expanded="false">
-        <button type="button" class="search-clear" id="searchClear" aria-label="Limpar busca">
-          <svg class="ic" aria-hidden="true"><use href="#i-x"/></svg>
-        </button>
+        <button type="button" class="search-clear" id="searchClear" aria-label="Limpar busca"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
         <button class="btn btn-dark search-go" type="submit">Buscar</button>
         <div class="search-sug" id="searchSug" role="listbox" aria-label="Sugestões"></div>
       </form>
@@ -61,184 +54,33 @@
     </div>
   </section>
 
-  <!-- CATEGORIAS -->
   <section class="section" id="categorias" aria-label="Categorias">
     <div class="container">
       <div class="car-head">
-        <div class="sec-head" style="margin:0">
-          <div>
-            <span class="kicker">Compre por categoria</span>
-            <h2>Encontre tudo para o seu pet</h2>
-          </div>
-        </div>
-        <div class="car-btns">
-          <button class="car-btn" data-car-prev aria-label="Categorias anteriores"><svg class="ic" aria-hidden="true"><use href="#i-chev-left"/></svg></button>
-          <button class="car-btn" data-car-next aria-label="Próximas categorias"><svg class="ic" aria-hidden="true"><use href="#i-chev-right"/></svg></button>
-        </div>
+        <div class="sec-head" style="margin:0"><div><span class="kicker">Compre por categoria</span><h2>Encontre tudo para o seu pet</h2></div></div>
+        <div class="car-btns"><button class="car-btn" data-car-prev aria-label="Categorias anteriores"><svg class="ic" aria-hidden="true"><use href="#i-chev-left"/></svg></button><button class="car-btn" data-car-next aria-label="Próximas categorias"><svg class="ic" aria-hidden="true"><use href="#i-chev-right"/></svg></button></div>
       </div>
       <div class="car-scroll pill-row" id="pillRow" style="margin-top:22px"></div>
     </div>
   </section>
 
-  <!-- OFERTAS -->
   <section class="section section-white" aria-label="Ofertas da semana" style="padding-top:56px">
-    <div class="container">
-      <div class="sec-head">
-        <div>
-          <span class="kicker">Só até domingo</span>
-          <h2>Ofertas da semana</h2>
-          <p>Descontos especiais nos favoritos dos pets. Aproveite enquanto durarem os estoques.</p>
-        </div>
-        <a class="sec-link" href="pages/busca.html?ofertas=1">Ver todas <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
-      </div>
-      <div class="grid-products" id="gridOfertas"></div>
-    </div>
+    <div class="container"><div class="sec-head"><div><span class="kicker">Só até domingo</span><h2>Ofertas da semana</h2><p>Descontos especiais nos favoritos dos pets. Aproveite enquanto durarem os estoques.</p></div><a class="sec-link" href="pages/busca.html?ofertas=1">Ver todas <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></a></div><div class="grid-products" id="gridOfertas"></div></div>
   </section>
 
-  <!-- DESTAQUE BANHO & TOSA -->
-  <section class="section" aria-label="Banho e tosa">
-    <div class="container">
-      <div class="split">
-        <div class="split-media reveal">
-          <img src="assets/images/banho-tosa.jpg" alt="Cachorro enrolado em toalha após banho em pet shop" loading="lazy">
-          <div class="split-float">
-            <svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg>
-            <div>+2.400 banhos<small>pets atendidos com carinho</small></div>
-          </div>
-        </div>
-        <div class="split-body reveal">
-          <span class="kicker">Banho &amp; tosa</span>
-          <h2>Cuidado profissional para o seu pet sair renovado</h2>
-          <p>Nossa equipe usa produtos hipoalergênicos e técnicas sem estresse. Agende o banho e complete os cuidados em casa com nossa linha de higiene.</p>
-          <ul class="check-list">
-            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg> Banho com shampoo adequado ao tipo de pelo</li>
-            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg> Hidratação, corte de unhas e limpeza de ouvidos</li>
-            <li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg> Tosa higiênica e na tesoura com profissionais certificados</li>
-          </ul>
-          <div class="split-cta">
-            <a class="btn btn-primary" href="higiene.html">Ver linha de higiene</a>
-            <button class="btn btn-outline-navy" data-open-contato>Agendar banho</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <section class="section" aria-label="Banho e tosa"><div class="container"><div class="split"><div class="split-media reveal"><img src="assets/images/banho-tosa.jpg" alt="Cachorro enrolado em toalha após banho em pet shop" loading="lazy"><div class="split-float"><svg class="ic" aria-hidden="true"><use href="#i-sparkle"/></svg><div>+2.400 banhos<small>pets atendidos com carinho</small></div></div></div><div class="split-body reveal"><span class="kicker">Banho &amp; tosa</span><h2>Cuidado profissional para o seu pet sair renovado</h2><p>Nossa equipe usa produtos hipoalergênicos e técnicas sem estresse. Agende o banho e complete os cuidados em casa com nossa linha de higiene.</p><ul class="check-list"><li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg> Banho com shampoo adequado ao tipo de pelo</li><li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg> Hidratação, corte de unhas e limpeza de ouvidos</li><li><svg class="ic" aria-hidden="true"><use href="#i-check-circle"/></svg> Tosa higiênica e na tesoura com profissionais certificados</li></ul><div class="split-cta"><a class="btn btn-primary" href="higiene.html">Ver linha de higiene</a><button class="btn btn-outline-navy" data-open-contato>Agendar banho</button></div></div></div></div></section>
 
-  <!-- MAIS VENDIDOS -->
-  <section class="section section-white" aria-label="Mais vendidos">
-    <div class="container">
-      <div class="sec-head">
-        <div>
-          <span class="kicker">Os favoritos</span>
-          <h2>Mais vendidos</h2>
-          <p>Os produtos que os pets mais amam, escolhidos por milhares de tutores.</p>
-        </div>
-      </div>
-      <div class="toolbar">
-        <div class="chips" id="homeChips" role="group" aria-label="Filtrar por animal"></div>
-        <label class="sort-wrap">Ordenar
-          <select class="input" id="homeSort">
-            <option value="rel">Mais relevantes</option>
-            <option value="vendidos">Mais vendidos</option>
-            <option value="novos">Novidades</option>
-            <option value="menor">Menor preço</option>
-            <option value="maior">Maior preço</option>
-            <option value="aval">Melhor avaliados</option>
-          </select>
-        </label>
-      </div>
-      <div class="grid-products" id="gridVendidos"></div>
-    </div>
-  </section>
+  <section class="section section-white" aria-label="Mais vendidos"><div class="container"><div class="sec-head"><div><span class="kicker">Os favoritos</span><h2>Mais vendidos</h2><p>Os produtos que os pets mais amam, escolhidos por milhares de tutores.</p></div></div><div class="toolbar"><div class="chips" id="homeChips" role="group" aria-label="Filtrar por animal"></div><label class="sort-wrap">Ordenar<select class="input" id="homeSort"><option value="rel">Mais relevantes</option><option value="vendidos">Mais vendidos</option><option value="novos">Novidades</option><option value="menor">Menor preço</option><option value="maior">Maior preço</option><option value="aval">Melhor avaliados</option></select></label></div><div class="grid-products" id="gridVendidos"></div></div></section>
 
-  <!-- BENEFÍCIOS -->
-  <section class="section benefits" aria-label="Vantagens da loja">
-    <div class="container">
-      <div class="benefits-grid">
-        <div class="benefit reveal">
-          <div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg></div>
-          <div><h3>Frete grátis</h3><p>Em compras acima de R$149 para todo o Brasil.</p></div>
-        </div>
-        <div class="benefit reveal">
-          <div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></div>
-          <div><h3>Compra segura</h3><p>Pagamento protegido no cartão, Pix ou boleto.</p></div>
-        </div>
-        <div class="benefit reveal">
-          <div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg></div>
-          <div><h3>Troca fácil</h3><p>7 dias para trocar, sem burocracia e sem custo.</p></div>
-        </div>
-        <div class="benefit reveal">
-          <div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-headset"/></svg></div>
-          <div><h3>Suporte pet</h3><p>Time especializado de seg a sáb, 8h às 22h.</p></div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <section class="section benefits" aria-label="Vantagens da loja"><div class="container"><div class="benefits-grid"><div class="benefit reveal"><div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-truck"/></svg></div><div><h3>Frete grátis</h3><p>Em compras acima de R$149 para todo o Brasil.</p></div></div><div class="benefit reveal"><div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-shield"/></svg></div><div><h3>Compra segura</h3><p>Pagamento protegido no cartão, Pix ou boleto.</p></div></div><div class="benefit reveal"><div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-refresh"/></svg></div><div><h3>Troca fácil</h3><p>7 dias para trocar, sem burocracia e sem custo.</p></div></div><div class="benefit reveal"><div class="b-icon"><svg class="ic" aria-hidden="true"><use href="#i-headset"/></svg></div><div><h3>Suporte pet</h3><p>Time especializado de seg a sáb, 8h às 22h.</p></div></div></div></div></section>
 
-  <!-- ARTIGOS -->
-  <section class="section" aria-label="Dicas e artigos">
-    <div class="container">
-      <div class="sec-head">
-        <div>
-          <span class="kicker">Blog do tutor</span>
-          <h2>Dicas para cuidar melhor</h2>
-          <p>Guias práticos de alimentação, higiene e comportamento para o dia a dia com seu pet.</p>
-        </div>
-      </div>
-      <div class="art-featured reveal" id="artFeatured"></div>
-      <div class="art-grid" id="artGrid"></div>
-    </div>
-  </section>
+  <section class="section" aria-label="Dicas e artigos"><div class="container"><div class="sec-head"><div><span class="kicker">Blog do tutor</span><h2>Dicas para cuidar melhor</h2><p>Guias práticos de alimentação, higiene e comportamento para o dia a dia com seu pet.</p></div></div><div class="art-featured reveal" id="artFeatured"></div><div class="art-grid" id="artGrid"></div></div></section>
 
-  <!-- CLUBE -->
-  <section class="section-sm" aria-label="Clube de ofertas">
-    <div class="container">
-      <div class="promo-band reveal">
-        <div class="promo-icon"><svg class="ic" aria-hidden="true"><use href="#i-gift"/></svg></div>
-        <div class="promo-body">
-          <h2>Clube Patas &amp; Pelos: 10% OFF na primeira compra</h2>
-          <p>Crie sua conta grátis, acompanhe pedidos, salve favoritos e ganhe um cupom de boas-vindas.</p>
-          <span class="promo-code">BEMVINDO10
-            <button data-copy="BEMVINDO10" aria-label="Copiar cupom BEMVINDO10"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg></button>
-          </span>
-        </div>
-        <a class="btn btn-primary btn-lg" href="pages/cadastro.html">Criar conta grátis</a>
-      </div>
-    </div>
-  </section>
+  <section class="section-sm" aria-label="Clube de ofertas"><div class="container"><div class="promo-band reveal"><div class="promo-icon"><svg class="ic" aria-hidden="true"><use href="#i-gift"/></svg></div><div class="promo-body"><h2>Clube Patas &amp; Pelos: 10% OFF na primeira compra</h2><p>Crie sua conta grátis, acompanhe pedidos, salve favoritos e ganhe um cupom de boas-vindas.</p><span class="promo-code">BEMVINDO10 <button data-copy="BEMVINDO10" aria-label="Copiar cupom BEMVINDO10"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg></button></span></div><a class="btn btn-primary btn-lg" href="pages/cadastro.html">Criar conta grátis</a></div></div></section>
 
-  <!-- DEPOIMENTOS -->
-  <section class="section" aria-label="Depoimentos de clientes">
-    <div class="container">
-      <div class="car-head">
-        <div class="sec-head" style="margin:0">
-          <div>
-            <span class="kicker">Quem compra, recomenda</span>
-            <h2>O que dizem os tutores</h2>
-          </div>
-        </div>
-        <div class="car-btns">
-          <button class="car-btn" data-car-prev aria-label="Depoimentos anteriores"><svg class="ic" aria-hidden="true"><use href="#i-chev-left"/></svg></button>
-          <button class="car-btn" data-car-next aria-label="Próximos depoimentos"><svg class="ic" aria-hidden="true"><use href="#i-chev-right"/></svg></button>
-        </div>
-      </div>
-      <div class="car-scroll" id="testRow" style="margin-top:22px"></div>
-    </div>
-  </section>
+  <section class="section" aria-label="Depoimentos de clientes"><div class="container"><div class="car-head"><div class="sec-head" style="margin:0"><div><span class="kicker">Quem compra, recomenda</span><h2>O que dizem os tutores</h2></div></div><div class="car-btns"><button class="car-btn" data-car-prev aria-label="Depoimentos anteriores"><svg class="ic" aria-hidden="true"><use href="#i-chev-left"/></svg></button><button class="car-btn" data-car-next aria-label="Próximos depoimentos"><svg class="ic" aria-hidden="true"><use href="#i-chev-right"/></svg></button></div></div><div class="car-scroll" id="testRow" style="margin-top:22px"></div></div></section>
 
-  <!-- VISTOS RECENTEMENTE -->
-  <section class="section-sm" id="recentSec" aria-label="Vistos recentemente" hidden>
-    <div class="container">
-      <div class="sec-head">
-        <div>
-          <span class="kicker">Histórico</span>
-          <h2>Vistos recentemente</h2>
-        </div>
-      </div>
-      <div class="grid-products" id="recentGrid"></div>
-    </div>
-  </section>
-
+  <section class="section-sm" id="recentSec" aria-label="Vistos recentemente" hidden><div class="container"><div class="sec-head"><div><span class="kicker">Histórico</span><h2>Vistos recentemente</h2></div></div><div class="grid-products" id="recentGrid"></div></div></section>
 </main>
 
 <script src="js/products.js"></script>
@@ -250,5 +92,6 @@
 <script src="js/product.js"></script>
 <script src="js/category.js"></script>
 <script src="js/main.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
